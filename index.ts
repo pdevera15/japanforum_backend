@@ -26,7 +26,6 @@ app.get("/", (req: Request, res: Response) => {
 })
 
 app.post("/finduser", (req: Request, res: Response) => {
-  console.log(req.body)
   UserRepo.FindUser(db, req.body)
     .then((result) => {
       res.json(result)
