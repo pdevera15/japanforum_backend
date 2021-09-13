@@ -1,6 +1,5 @@
 import User, { COLLECTION_NAME } from "../model/Usersdao"
-import { Db, Filter } from "mongodb"
-
+import { Db, Filter, ObjectId } from "mongodb"
 export default class UsersRepo {
   /**
    * Insert a users
@@ -23,7 +22,14 @@ export default class UsersRepo {
    * @param params - Filter Condition
    */
   static async FindUser(MongoClient: Db, params: any) {
-    return await MongoClient.collection(COLLECTION_NAME).findOne(params)
+    const { _id } = params
+
+    if (_id) {
+      var o_id = new ObjectId(_id)
+      params = { ...params, _id: o_id }
+    }
+
+    return await MongoClient.collection(COLLECTION_NAME).find(params).toArray()
   }
 
   /**
