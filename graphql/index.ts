@@ -5,11 +5,6 @@ import UserRepo from "../database/repository/UsersRepo"
 import { Db } from "mongodb"
 import MongoDb from "../MongoDbInit"
 
-let db: Db
-MongoDb().then((client) => {
-  db = client
-})
-
 const typeDefs = gql`
   type Topic {
     title: String
@@ -32,16 +27,7 @@ const typeDefs = gql`
   }
 `
 
-const resolvers = {
-  Query: {
-    Topics: () => {
-      return TopicRepo.FindAllTopics(db).then((res) => {
-        console.log(res)
-        return res
-      })
-    },
-  },
-}
+const resolvers = {}
 
 const server = new ApolloServer({ typeDefs, resolvers })
 

@@ -1,24 +1,15 @@
 import * as dotenv from "dotenv"
+import { MongoClient } from "mongodb"
 dotenv.config()
 
-import { MongoClient } from "mongodb"
-
 const URI = process.env.MONGO_URI || "localhost"
-/*
- ** Setting-Up MongoDB Connection
- ** @return MongoDb Client
- */
-const MongoDbInit = async () => {
-  // Initialize MongoDb
-  const client = new MongoClient(URI)
 
-  try {
-    // Connect To MongoDb
-    await client.connect()
-    return client.db(process.env.DB_NAME)
-  } catch (error) {
-    throw new Error("Cannot Connect to Database")
+export default class Connection {
+  static db: MongoClient
+  static async open() {
+    if (this.db) return this.db.db(process.env.DB_NAME)
+    const client = new MongoClient(URI)
+    this.db = await client.connect()
+    return this.db.db(process.env.DB_NAME)
   }
 }
-
-export default MongoDbInit

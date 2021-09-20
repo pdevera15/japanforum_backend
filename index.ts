@@ -1,21 +1,21 @@
 import express, { Request, Response } from "express"
 import TopicRepo from "./database/repository/TopicRepo"
 import UserRepo from "./database/repository/UsersRepo"
-import User, { COLLECTION_NAME } from "./database/model/Usersdao"
 import { Db } from "mongodb"
-import MongoDb from "./MongoDbInit"
+import Connection from "./MongoDbInit"
 import cors from "cors"
-import { Console } from "console"
-
-let db: Db
-const port = 8001
 
 const app = express()
+
+let db: Db
+const port = process.env.PORT || "8001"
+app.set("port", port)
+
 app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
-app.get("/", (req: Request, res: Response) => {
+app.get("/alltopics", (req: Request, res: Response) => {
   TopicRepo.FindAllTopics(db)
     .then((result) => {
       res.json(result)
@@ -35,11 +35,13 @@ app.post("/finduser", (req: Request, res: Response) => {
     })
 })
 
-MongoDb()
-  .then((client) => {
-    db = client
+Connection.open()
+  .then((res) => {
+    db = res
     app.listen(port, () => {
-      console.log("Listening TO PORT", port)
+      console.log(`Server running at port ${port}`)
     })
   })
-  .catch((e) => console.log("ERROR", e))
+  .catch((e) => {
+    console.error("Error Connecting To Database", e)
+  })
