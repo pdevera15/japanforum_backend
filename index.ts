@@ -4,6 +4,8 @@ import UserRepo from "./database/repository/UsersRepo"
 import { Db } from "mongodb"
 import Connection from "./MongoDbInit"
 import cors from "cors"
+import { router as userController } from "./routes/user"
+import { authenticateToken } from "./helpers/auth"
 
 const app = express()
 
@@ -15,12 +17,14 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
-app.get("/alltopics", (req: Request, res: Response) => {
-  TopicRepo.FindAllTopics(db)
+app.use(userController)
+
+app.get("/alltopics", authenticateToken, (req: Request, res: Response) => {
+  TopicRepo.FindAllTopics(Connection.Db)
     .then((result) => {
-      res.json(result)
+      res.send(result)
     })
-    .catch(() => {
+    .catch((error) => {
       res.sendStatus(404)
     })
 })
@@ -36,8 +40,7 @@ app.post("/finduser", (req: Request, res: Response) => {
 })
 
 Connection.open()
-  .then((res) => {
-    db = res
+  .then(() => {
     app.listen(port, () => {
       console.log(`Server running at port ${port}`)
     })

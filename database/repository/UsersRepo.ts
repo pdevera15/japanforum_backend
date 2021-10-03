@@ -23,12 +23,11 @@ export default class UsersRepo {
    */
   static async FindUser(MongoClient: Db, params: any) {
     const { _id } = params
-
     if (_id) {
       var o_id = new ObjectId(_id)
       params = { ...params, _id: o_id }
     }
-
+    console.log(params)
     return await MongoClient.collection(COLLECTION_NAME).find(params).toArray()
   }
 
