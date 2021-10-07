@@ -12,11 +12,16 @@ router.post("/login", (req: Request, res: Response) => {
     const username = req.body.username;
     const password = req.body.password;
 
-    UserRepo.FindUser(Connection.Db, { username, password }).then((data) => {
+    UserRepo.GetPassword(Connection.Db, username).then((data) => {
       if (data.length === 0) {
         res.status(403).send("No User Found");
       } else {
-        res.send(generateAccessToken(username));
+        console.log(password, data[0].password);
+        bcryptjs.compare(password, data[0].password).then((response) => {
+          response
+            ? res.send(generateAccessToken(username))
+            : res.send("Username or Password Not found");
+        });
       }
     });
   } else {

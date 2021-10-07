@@ -57,5 +57,17 @@ export default class UsersRepo {
       params
     );
   }
-  // Delete
+
+  /**
+   * Get password of users
+   *
+   * @param params - username
+   */
+  static async GetPassword(MongoClient: Db, params: string) {
+    return await MongoClient.collection(COLLECTION_NAME)
+      .find({
+        username: params,
+      })
+      .toArray();
+  }
 }
