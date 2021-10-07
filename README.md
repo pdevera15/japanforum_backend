@@ -1,2 +1,5 @@
-# japanforum_backend
-Backend For Japan Forum
+#Technologies
+NodeJs
+Express
+Typescript
+Bscriptjs
