@@ -11,7 +11,7 @@ export default class UsersRepo {
     MongoClient: Db,
     params: {
       username: string;
-      hashPassword: string | undefined;
+      hashPassword: string;
       email: string;
     }
   ) {
