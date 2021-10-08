@@ -1,8 +1,9 @@
 import express, { Request, Response } from "express";
 import UserRepo from "../database/repository/UsersRepo";
 import Connection from "../MongoDbInit";
-import { generateAccessToken } from "../helpers/auth";
 import bcryptjs from "bcryptjs";
+import { generateAccessToken } from "../helpers/auth";
+import { ResponseMessage } from "../utils/ResponseUtils";
 
 const router = express.Router();
 Connection.open();
@@ -14,13 +15,13 @@ router.post("/login", (req: Request, res: Response) => {
 
     UserRepo.GetPassword(Connection.Db, username).then((data) => {
       if (data.length === 0) {
-        res.status(403).send("No User Found");
+        res.json({ result: 0, message: "No User Found" });
       } else {
         console.log(password, data[0].password);
         bcryptjs.compare(password, data[0].password).then((response) => {
           response
-            ? res.send(generateAccessToken(username))
-            : res.send("Username or Password Not found");
+            ? res.json({ token: generateAccessToken(username) })
+            : res.json(ResponseMessage.LOGIN_FAILED);
         });
       }
     });
@@ -42,11 +43,11 @@ router.post("/register", (req: Request, res: Response) => {
       UserRepo.InsertUser(Connection.Db, { username, hashPassword, email })
         .then((response) => {
           response.acknowledged
-            ? res.sendStatus(200)
-            : res.status(403).send("Failed To Insert");
+            ? res.json(ResponseMessage.REGISTER_SUCCESS)
+            : res.json(ResponseMessage.REGISTER_FAILED);
         })
         .catch((e) => {
-          res.sendStatus(403);
+          res.sendStatus(ResponseMessage.STATUS_500);
           console.log(e);
         });
     });
