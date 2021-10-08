@@ -1,5 +1,5 @@
 import Topic, { COLLECTION_NAME } from "../model/Topicdao";
-import { Db, MongoClient, ObjectId } from "mongodb";
+import { Db, MongoClient, ObjectId, Filter } from "mongodb";
 
 export default class TopicRepo {
   // Create
@@ -17,6 +17,8 @@ export default class TopicRepo {
     return await db.collection(COLLECTION_NAME).findOne(id);
   }
   // Update
-
+  static async UpdateTopic(db: Db, filter: Filter<any>, params: any) {
+    return await db.collection(COLLECTION_NAME).updateOne(filter, params);
+  }
   // Delete
 }

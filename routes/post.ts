@@ -3,6 +3,7 @@ import TopicRepo from "../database/repository/TopicRepo";
 import Connection from "../MongoDbInit";
 import { authenticateToken } from "../helpers/auth";
 import { ResponseMessage } from "../utils/ResponseUtils";
+import { ObjectId } from "mongodb";
 
 const router = express.Router();
 Connection.open();
@@ -32,6 +33,33 @@ router.post(
         date_updated,
         author_id,
       }).then((response) => {
+        response.acknowledged
+          ? res.json(ResponseMessage.POST_SUCCESS)
+          : res.json(ResponseMessage.POST_FAILED);
+      });
+    }
+  }
+);
+router.post(
+  "/update_topic",
+  authenticateToken,
+  (req: Request, res: Response) => {
+    if (req.body) {
+      const _id = req.body._id;
+      const title = req.body.title;
+      const context = req.body.context;
+      const date_updated = new Date();
+      const author_id = req.body.author;
+      TopicRepo.UpdateTopic(
+        Connection.Db,
+        { _id: new ObjectId(_id) },
+        {
+          title,
+          context,
+          date_updated,
+          author_id,
+        }
+      ).then((response) => {
         response.acknowledged
           ? res.json(ResponseMessage.POST_SUCCESS)
           : res.json(ResponseMessage.POST_FAILED);
