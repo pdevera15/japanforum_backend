@@ -4,4 +4,6 @@ export const ResponseMessage = {
   REGISTER_FAILED: { result: 0, message: "Register Failed" },
   LOGIN_SUCCESS: { result: 1, message: "Login Succesfully" },
   LOGIN_FAILED: { result: 0, message: "Login Failed" },
+  POST_SUCCESS: { result: 1, message: "Post Success" },
+  POST_FAILED: { result: 0, message: "Post FAILED" },
 };
