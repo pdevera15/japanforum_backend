@@ -17,7 +17,7 @@ type Topic = {
 };
 
 router.post(
-  "/create_post",
+  "/create_topic",
   authenticateToken,
   (req: Request, res: Response) => {
     if (req.body) {
@@ -40,6 +40,7 @@ router.post(
     }
   }
 );
+
 router.post(
   "/update_topic",
   authenticateToken,
@@ -67,3 +68,29 @@ router.post(
     }
   }
 );
+
+router.get("/get_topics", (req: Request, res: Response) => {
+  if (req.body) {
+    const _id = req.body._id;
+    const title = req.body.title;
+    const context = req.body.context;
+    const date_updated = new Date();
+    const author_id = req.body.author;
+    TopicRepo.FindAllTopics(Connection.Db).then((response) => {
+      res.json(response);
+    });
+  }
+});
+
+router.post("/get_topics", authenticateToken, (req: Request, res: Response) => {
+  if (req.body) {
+    const _id = req.body._id;
+    const title = req.body.title;
+    const context = req.body.context;
+    const date_updated = new Date();
+    const author_id = req.body.author;
+    TopicRepo.FindAllTopics(Connection.Db).then((response) => {
+      res.json(response);
+    });
+  }
+});
