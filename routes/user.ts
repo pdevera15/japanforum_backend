@@ -13,7 +13,7 @@ router.post("/login", (req: Request, res: Response) => {
     const username = req.body.username;
     const password = req.body.password;
 
-    UserRepo.GetPassword(Connection.Db, username).then((data) => {
+    UserRepo.GetPassword(username).then((data) => {
       if (data.length === 0) {
         res.json({ result: 0, message: "No User Found" });
       } else {
@@ -40,7 +40,7 @@ router.post("/register", (req: Request, res: Response) => {
     let hashPassword;
     bcryptjs.hash(password, saltRounds).then((hash) => {
       hashPassword = hash;
-      UserRepo.InsertUser(Connection.Db, { username, hashPassword, email })
+      UserRepo.InsertUser({ username, hashPassword, email })
         .then((response) => {
           response.acknowledged
             ? res.json(ResponseMessage.REGISTER_SUCCESS)

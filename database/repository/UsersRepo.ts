@@ -1,5 +1,10 @@
 import User, { COLLECTION_NAME } from "../model/Usersdao";
-import { Db, Filter, ObjectId } from "mongodb";
+import { Filter, ObjectId } from "mongodb";
+import Connection from "../../MongoDbInit";
+
+Connection.open();
+const db = Connection.Db;
+
 export default class UsersRepo {
   /**
    * Insert a users
@@ -7,15 +12,12 @@ export default class UsersRepo {
    * @param filter - The filter used to select the document to update
    * @param params - Data to be Inserted
    */
-  static async InsertUser(
-    MongoClient: Db,
-    params: {
-      username: string;
-      hashPassword: string;
-      email: string;
-    }
-  ) {
-    return await MongoClient.collection(COLLECTION_NAME).insertOne({
+  static async InsertUser(params: {
+    username: string;
+    hashPassword: string;
+    email: string;
+  }) {
+    return await db.collection(COLLECTION_NAME).insertOne({
       username: params.username,
       password: params.hashPassword,
       email: params.email,
@@ -26,8 +28,8 @@ export default class UsersRepo {
   }
 
   // Get All Users
-  static async FindAllUser(MongoClient: Db) {
-    return await MongoClient.collection(COLLECTION_NAME).find().toArray();
+  static async FindAllUser() {
+    return await db.collection(COLLECTION_NAME).find().toArray();
   }
 
   /**
@@ -35,14 +37,14 @@ export default class UsersRepo {
    *
    * @param params - Filter Condition
    */
-  static async FindUser(MongoClient: Db, params: any) {
+  static async FindUser(params: any) {
     const { _id } = params;
     if (_id) {
       var o_id = new ObjectId(_id);
       params = { ...params, _id: o_id };
     }
     console.log(params);
-    return await MongoClient.collection(COLLECTION_NAME).find(params).toArray();
+    return await db.collection(COLLECTION_NAME).find(params).toArray();
   }
 
   /**
@@ -51,11 +53,8 @@ export default class UsersRepo {
    * @param filter - The filter used to select the document to update
    * @param params - Data to be updated
    */
-  static async UpdateUser(MongoClient: Db, filter: Filter<any>, params: User) {
-    return await MongoClient.collection(COLLECTION_NAME).updateOne(
-      filter,
-      params
-    );
+  static async UpdateUser(filter: Filter<any>, params: User) {
+    return await db.collection(COLLECTION_NAME).updateOne(filter, params);
   }
 
   /**
@@ -63,8 +62,9 @@ export default class UsersRepo {
    *
    * @param params - username
    */
-  static async GetPassword(MongoClient: Db, params: string) {
-    return await MongoClient.collection(COLLECTION_NAME)
+  static async GetPassword(params: string) {
+    return await db
+      .collection(COLLECTION_NAME)
       .find({
         username: params,
       })
