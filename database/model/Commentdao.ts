@@ -1,4 +1,4 @@
-import { Document, Collection } from "mongodb"
+import { Document } from "mongodb"
 
 export const COLLECTION_NAME = "comments"
 

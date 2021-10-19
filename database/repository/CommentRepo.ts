@@ -1,24 +1,35 @@
-import Comment, { COLLECTION_NAME } from "../model/Commentdao";
-import { Db } from "mongodb";
-import Connection from "../../MongoDbInit";
-import { toObjectId } from "../../helpers/utils";
+import Comment, { COLLECTION_NAME } from "../model/Commentdao"
+import { Db } from "mongodb"
+import Connection from "../../MongoDbInit"
+import { toObjectId } from "../../helpers/utils"
 
-Connection.open();
-const db = Connection.Db;
+Connection.open()
+const db = Connection.Db
 
 export default class CommentRepo {
-  // Create
+  /**
+   *
+   * @param doc
+   * @returns
+   */
   static async InsertComment(doc: Comment) {
-    return await db.collection(COLLECTION_NAME).insertOne(doc);
+    return await db.collection(COLLECTION_NAME).insertOne(doc)
   }
-  // Get All Comment
+  /**
+   *
+   * @returns
+   */
   static async FindAllComment() {
-    return await db.collection(COLLECTION_NAME).find().toArray();
+    return await db.collection(COLLECTION_NAME).find().toArray()
   }
 
-  // Get Comment
+  /**
+   *
+   * @param query
+   * @returns
+   */
   static async FindComment(query: { _id: string }) {
-    return await db.collection(COLLECTION_NAME).findOne(toObjectId(query._id));
+    return await db.collection(COLLECTION_NAME).findOne(toObjectId(query._id))
   }
   // Update
 

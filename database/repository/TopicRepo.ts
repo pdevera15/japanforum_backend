@@ -1,32 +1,50 @@
-import Topic, { COLLECTION_NAME } from "../model/Topicdao";
-import { Db, Filter } from "mongodb";
-import { toObjectId } from "../../helpers/utils";
-import Connection from "../../MongoDbInit";
+import Topic, { COLLECTION_NAME } from "../model/Topicdao"
+import { Filter } from "mongodb"
+import { toObjectId } from "../../helpers/utils"
+import Connection from "../../MongoDbInit"
 
-Connection.open();
-const db = Connection.Db;
+Connection.open()
+const db = Connection.Db
 
 export default class TopicRepo {
-  // Create
+  /**
+   *
+   * @param params
+   * @returns
+   */
   static async AddTopic(params: Topic) {
-    return await db.collection(COLLECTION_NAME).insertOne(params);
+    return await db.collection(COLLECTION_NAME).insertOne(params)
   }
-  // Get All Topics
+  /**
+   *
+   * @returns
+   */
   static async FindAllTopics() {
-    return await db.collection(COLLECTION_NAME).find().toArray();
+    return await db.collection(COLLECTION_NAME).find().toArray()
   }
-  // Get Topic
+  /**
+   *
+   * @param query
+   * @returns
+   */
   static async FindTopic(query: { _id: string }) {
-    return await db.collection(COLLECTION_NAME).findOne(toObjectId(query._id));
+    return await db.collection(COLLECTION_NAME).findOne(toObjectId(query._id))
   }
-  // Update
+  /**
+   *
+   * @param filter :
+   * @param params
+   * @returns
+   */
   static async UpdateTopic(filter: Filter<any>, params: any) {
-    return await db.collection(COLLECTION_NAME).updateOne(filter, params);
+    return await db.collection(COLLECTION_NAME).updateOne(filter, params)
   }
-  // Delete
+  /**
+   *
+   * @param query
+   * @returns
+   */
   static async DeleteTopic(query: { _id: string }) {
-    return await db
-      .collection(COLLECTION_NAME)
-      .deleteOne(toObjectId(query._id));
+    return await db.collection(COLLECTION_NAME).deleteOne(toObjectId(query._id))
   }
 }

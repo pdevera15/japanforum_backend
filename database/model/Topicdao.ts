@@ -1,11 +1,11 @@
-import { Document, Collection } from "mongodb";
+import { Document } from "mongodb"
 
-export const COLLECTION_NAME = "post";
+export const COLLECTION_NAME = "post"
 
 export default interface Topic extends Document {
-  title: string;
-  author_id: string;
-  date_created?: string | Date;
-  date_updated: string | Date;
-  context: string;
+  title: string
+  author_id: string
+  date_created?: string | Date
+  date_updated: string | Date
+  context: string
 }
