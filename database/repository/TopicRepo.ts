@@ -3,48 +3,53 @@ import { Filter } from "mongodb"
 import { toObjectId } from "../../helpers/utils"
 import Connection from "../../MongoDbInit"
 
-Connection.open()
-const db = Connection.Db
-
-export default class TopicRepo {
+export const TopicRepo = {
   /**
    *
    * @param params
    * @returns
    */
-  static async AddTopic(params: Topic) {
-    return await db.collection(COLLECTION_NAME).insertOne(params)
-  }
+  AddTopic: async (params: Topic) => {
+    return await Connection.getDb()
+      .collection(COLLECTION_NAME)
+      .insertOne(params)
+  },
   /**
    *
    * @returns
    */
-  static async FindAllTopics() {
-    return await db.collection(COLLECTION_NAME).find().toArray()
-  }
+  FindAllTopics: async () => {
+    return await Connection.getDb().collection(COLLECTION_NAME).find().toArray()
+  },
   /**
    *
    * @param query
    * @returns
    */
-  static async FindTopic(query: { _id: string }) {
-    return await db.collection(COLLECTION_NAME).findOne(toObjectId(query._id))
-  }
+  FindTopic: async (query: { _id: string }) => {
+    return await Connection.getDb()
+      .collection(COLLECTION_NAME)
+      .findOne(toObjectId(query._id))
+  },
   /**
    *
    * @param filter :
    * @param params
    * @returns
    */
-  static async UpdateTopic(filter: Filter<any>, params: any) {
-    return await db.collection(COLLECTION_NAME).updateOne(filter, params)
-  }
+  UpdateTopic: async (filter: Filter<any>, params: any) => {
+    return await Connection.getDb()
+      .collection(COLLECTION_NAME)
+      .updateOne(filter, params)
+  },
   /**
    *
    * @param query
    * @returns
    */
-  static async DeleteTopic(query: { _id: string }) {
-    return await db.collection(COLLECTION_NAME).deleteOne(toObjectId(query._id))
-  }
+  DeleteTopic: async (query: { _id: string }) => {
+    return await Connection.getDb()
+      .collection(COLLECTION_NAME)
+      .deleteOne(toObjectId(query._id))
+  },
 }

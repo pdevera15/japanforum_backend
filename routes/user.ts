@@ -1,19 +1,17 @@
 import express, { Request, Response } from "express"
-import UserRepo from "../database/repository/UsersRepo"
-import Connection from "../MongoDbInit"
+import { UsersRepo } from "../database/repository/UsersRepo"
 import bcryptjs from "bcryptjs"
 import { generateAccessToken } from "../helpers/auth"
 import { ResponseMessage } from "../utils/ResponseUtils"
 
 const router = express.Router()
-Connection.open()
 
 router.post("/login", (req: Request, res: Response) => {
   if (req.body) {
     const username = req.body.username
     const password = req.body.password
 
-    UserRepo.GetPassword(username).then((data) => {
+    UsersRepo.FindUser(username).then((data) => {
       if (data.length === 0) {
         res.json({ result: 0, message: "No User Found" })
       } else {
@@ -40,7 +38,7 @@ router.post("/register", (req: Request, res: Response) => {
     let hashPassword
     bcryptjs.hash(password, saltRounds).then((hash) => {
       hashPassword = hash
-      UserRepo.InsertUser({ username, hashPassword, email })
+      UsersRepo.InsertUser({ username, hashPassword, email })
         .then((response) => {
           response.acknowledged
             ? res.json(ResponseMessage.REGISTER_SUCCESS)

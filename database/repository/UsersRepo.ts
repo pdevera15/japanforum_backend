@@ -2,22 +2,19 @@ import User, { COLLECTION_NAME } from "../model/Usersdao"
 import { Filter, ObjectId } from "mongodb"
 import Connection from "../../MongoDbInit"
 
-Connection.open()
-const db = Connection.Db
-
-export default class UsersRepo {
+export const UsersRepo = {
   /**
    * Insert a users
    *
    * @param filter - The filter used to select the document to update
    * @param params - Data to be Inserted
    */
-  static async InsertUser(params: {
+  InsertUser: async (params: {
     username: string
     hashPassword: string
     email: string
-  }) {
-    return await db.collection(COLLECTION_NAME).insertOne({
+  }) => {
+    return await Connection.getDb().collection(COLLECTION_NAME).insertOne({
       username: params.username,
       password: params.hashPassword,
       email: params.email,
@@ -25,16 +22,16 @@ export default class UsersRepo {
       date_updated: new Date(),
       delete_flag: false,
     })
-  }
+  },
 
   /**
    * Get all users
    * @param
    * @returns Array of Users
    */
-  static async FindAllUser() {
-    return await db.collection(COLLECTION_NAME).find().toArray()
-  }
+  FindAllUser: async () => {
+    return await Connection.getDb().collection(COLLECTION_NAME).find().toArray()
+  },
 
   /**
    * Find a user
@@ -42,15 +39,17 @@ export default class UsersRepo {
    * @param params - Filter Condition
    * @return Return a user
    */
-  static async FindUser(params: any) {
+  FindUser: async (params: any) => {
     const { _id } = params
     if (_id) {
       var o_id = new ObjectId(_id)
       params = { ...params, _id: o_id }
     }
-    console.log(params)
-    return await db.collection(COLLECTION_NAME).find(params).toArray()
-  }
+    return await Connection.getDb()
+      .collection(COLLECTION_NAME)
+      .find({ username: params })
+      .toArray()
+  },
 
   /**
    * Update a users
@@ -58,21 +57,23 @@ export default class UsersRepo {
    * @param filter - The filter used to select the document to update
    * @param params - Data to be updated
    */
-  static async UpdateUser(filter: Filter<any>, params: User) {
-    return await db.collection(COLLECTION_NAME).updateOne(filter, params)
-  }
+  UpdateUser: async (filter: Filter<any>, params: User) => {
+    return await Connection.getDb()
+      .collection(COLLECTION_NAME)
+      .updateOne(filter, params)
+  },
 
   /**
    * Get password of users
    *
    * @param params - username
    */
-  static async GetPassword(params: string) {
-    return await db
+  GetPassword: async (params: string) => {
+    return await Connection.getDb()
       .collection(COLLECTION_NAME)
       .find({
         username: params,
       })
       .toArray()
-  }
+  },
 }
