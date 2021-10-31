@@ -18,7 +18,10 @@ router.post("/login", (req: Request, res: Response) => {
         console.log(password, data[0].password)
         bcryptjs.compare(password, data[0].password).then((response) => {
           response
-            ? res.json({ token: generateAccessToken(username) })
+            ? res.json({
+                token: generateAccessToken(username),
+                username,
+              })
             : res.json(ResponseMessage.LOGIN_FAILED)
         })
       }

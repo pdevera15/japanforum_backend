@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express"
-import TopicRepo from "../database/repository/TopicRepo"
+import { TopicRepo } from "../database/repository/TopicRepo"
 import { authenticateToken } from "../helpers/auth"
 import { ResponseMessage } from "../utils/ResponseUtils"
 import { ObjectId } from "mongodb"
@@ -29,7 +29,7 @@ router.post("/topics", authenticateToken, (req: Request, res: Response) => {
       date_created,
       date_updated,
       author_id,
-    }).then((response) => {
+    }).then((response: any) => {
       response.acknowledged
         ? res.json(ResponseMessage.POST_SUCCESS)
         : res.json(ResponseMessage.POST_FAILED)
@@ -52,7 +52,7 @@ router.put("/topics", authenticateToken, (req: Request, res: Response) => {
         date_updated,
         author_id,
       }
-    ).then((response) => {
+    ).then((response: any) => {
       response.acknowledged
         ? res.json(ResponseMessage.POST_SUCCESS)
         : res.json(ResponseMessage.POST_FAILED)
@@ -67,10 +67,19 @@ router.post("/topics", authenticateToken, (req: Request, res: Response) => {
   if (req.body) {
     const { _id, title, context, author_id: author } = req.body
     const date_updated = new Date()
-    TopicRepo.FindAllTopics().then((response) => {
+    TopicRepo.FindAllTopics().then((response: any) => {
       res.json(response)
     })
   }
 })
 
-export default router
+/**
+ * Find all topic
+ */
+router.get("/topics", (req: Request, res: Response) => {
+  TopicRepo.FindAllTopics().then((response) => {
+    res.json(response)
+  })
+})
+
+export { router }
