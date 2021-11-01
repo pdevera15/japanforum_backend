@@ -12,13 +12,13 @@ export const authenticateToken = (
 ) => {
   const authHeader = req.headers["authorization"]
   const token = authHeader && authHeader.split(" ")[1]
-  if (token) return res.sendStatus(401)
 
+  if (!token) return res.sendStatus(401)
   jwt.verify(
     token,
     process.env.TOKEN_SECRET as string,
     (err: any, user: any) => {
-      if (err) return res.sendStatus(403)
+      if (err) return res.status(403).send("Forbidden")
       next()
     }
   )
