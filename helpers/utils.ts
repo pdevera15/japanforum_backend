@@ -6,3 +6,5 @@ import { ObjectId } from "mongodb"
  * @return ObjectId: ObjectId
  */
 export const toObjectId = (id: string) => new ObjectId(id)
+
+export const getId = (id: ObjectId) => new ObjectId(id).toString()

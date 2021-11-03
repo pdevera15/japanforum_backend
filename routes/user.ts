@@ -3,6 +3,7 @@ import { UsersRepo } from "../database/repository/UsersRepo"
 import bcryptjs from "bcryptjs"
 import { generateAccessToken } from "../helpers/auth"
 import { ResponseMessage } from "../utils/ResponseUtils"
+import { getId } from "../helpers/utils"
 
 const router = express.Router()
 
@@ -15,12 +16,13 @@ router.post("/login", (req: Request, res: Response) => {
       if (data.length === 0) {
         res.json({ result: 0, message: "No User Found" })
       } else {
-        console.log(password, data[0].password)
+        console.log(password, getId(data[0]._id))
         bcryptjs.compare(password, data[0].password).then((response) => {
           response
             ? res.json({
                 token: generateAccessToken(username),
                 username,
+                id: getId(data[0]._id),
               })
             : res.json(ResponseMessage.LOGIN_FAILED)
         })
