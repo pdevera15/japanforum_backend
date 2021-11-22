@@ -54,6 +54,8 @@ router.post("/register", (req: Request, res: Response) => {
           console.log(e)
         })
     })
+  } else {
+    res.sendStatus(403)
   }
 })
 
